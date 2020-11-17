@@ -1,0 +1,80 @@
+{% extends "common/l_sidebar.html" %}
+{% load static %}
+{% load param_change %}
+
+{% block page_title %}EC site{% endblock %}
+{% block head %}
+{{ block.super }}
+
+<link rel="stylesheet" href="{% static 'shopping/css/style.css' %}">
+
+{% endblock %}
+
+{% block header_title %}EC site{% endblock %}
+
+{% block left_header_content %}
+
+<div style="width:80%;text-align:right;">
+    <form action="" method="GET">
+        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="キーワード検索">
+        <input type="submit" value="検索">
+    </form>
+</div>
+{% endblock %}
+
+{% block sidebar_content %}{% endblock %}
+
+{% block main  %}
+<main class="container">
+
+
+<div class="row">
+{% for content in data %}
+    <div class="col-sm-3 border my-2">
+        <div>{{ content.name }}</div>
+        <div>カテゴリ:{{ content.category }}</div>
+        <div>{{ content.price }}円</div>
+        <div class="text-center my-1">
+            <input type="button" value="カゴに入れる">
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+
+<!--
+ページネーションはテンプレートタグを拡張する方向で持っていく。
+https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables
+-->
+
+<ul class="pagination justify-content-center">
+    {% if data.has_previous %}
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a></li>
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' data.previous_page_number %}">前のページ</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link">最初のページ</a></li>
+    <li class="page-item"><a class="page-link">前のページ</a></li>
+    {% endif %}
+    <li class="page-item"><a class="page-link">{{ data.number }}</a></li>
+    {% if data.has_next %}
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' data.next_page_number %}">次のページ</a></li>
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' data.paginator.num_pages %}">最後のページ</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link">次のページ</a></li>
+    <li class="page-item"><a class="page-link">最後のページ</a></li>
+    {% endif %}
+</ul>
+
+
+
+
+
+
+
+     
+</main>
+{% endblock %}
+
+
+
+
